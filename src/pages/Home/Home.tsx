@@ -10,7 +10,7 @@ export default function Home() {
       {/* controls */}
       <ControlBar />
       {/* Tab & preview window */}
-      <div className="flex w-full h-[55vh]">
+      <div className="flex w-full h-[60vh]">
         <Tabs />
       </div>
       {/* playlist section */}

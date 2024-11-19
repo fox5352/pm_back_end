@@ -1,7 +1,7 @@
 export default function PlaylistSection() {
 
   return (
-    <div className="flex h-[38vh] border-t-2 border-[--border-one]">
+    <div className="flex h-[34vh] border-t-2 border-[--border-one]">
     </div>
   )
 }
