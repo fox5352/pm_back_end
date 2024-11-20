@@ -10,6 +10,9 @@
   --bg-one: black;
   --bg-two: white;
 
+  --ac-one: crimson;
+  --ac-two: aqua;
+
   --border-one: black;
   --border-two: white;
 
@@ -17,7 +20,7 @@
   --border-ac-one: aqua;
 
   --text-one: black;
-  --text-two: crimson;
+  --text-two: white;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
