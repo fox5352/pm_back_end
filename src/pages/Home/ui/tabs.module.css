@@ -1,0 +1,16 @@
+.body {
+    display: flex;
+    flex-direction: column;
+    width: 55%;
+    border-right: 2px solid var(--border-one);
+}
+
+.controls {
+    height: 28px;
+    border-bottom: 2px solid var(--border-one);
+}
+
+.content {
+    width: 100%;
+    height: calc(100% - 28px);
+}
