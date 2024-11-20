@@ -1,6 +1,6 @@
 import asv from "../assets/asv.json";
 
-type MetaData = {
+export type MetaData = {
   name: string;
   description: string;
   shortname: string;
@@ -9,19 +9,19 @@ type MetaData = {
   year: string;
 };
 
-type Chapter = {
+export type Chapter = {
   [chapterNumber: string]: {
     [verseNumber: string]: string
   }
 }
 
-type Book = {
+export type Book = {
   book_name: string;
   book: number;
   chapters: Chapter
 }
 
-type BibleMap = {
+export type BibleMap = {
   [book_name: string]: number
 }
 
