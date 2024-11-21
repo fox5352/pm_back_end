@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "windows-build": "tauri build -- --target x86_64-pc-windows-msvc"
   },
   "dependencies": {
     "react": "^18.2.0",
