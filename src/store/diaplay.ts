@@ -1,16 +1,14 @@
-import { create } from "zustand"
-
+import { create } from "zustand";
 
 type State = {
-  isLive: boolean
-}
+  isLive: boolean;
+};
 
 type Actions = {
-  toggleIsLive: () => void
-}
-
+  toggleIsLive: () => void;
+};
 
 export const useDisplay = create<State & Actions>()((set) => ({
   isLive: false,
   toggleIsLive: () => set((state) => ({ ...state, isLive: !state.isLive })),
-}))
+}));

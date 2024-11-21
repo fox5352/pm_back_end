@@ -28,7 +28,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   --bg-two: black;
 
   --border-one: white;
@@ -43,7 +43,6 @@
   margin: 0;
   padding: 0;
 }
-
 
 body {
   color: var(--text-one);

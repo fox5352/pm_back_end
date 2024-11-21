@@ -5,6 +5,6 @@
  * @param {string} b - The second string
  * @returns {string} The left hand if true else the right hand is return
  */
-export function cn(val: boolean, a = '', b = '') {
+export function cn(val: boolean, a = "", b = "") {
   return val ? a : b;
 }

@@ -1,10 +1,8 @@
-import { Bible } from "../../api/requests";
 import ControlBar from "./ui/ControlBar";
 import PlaylistSection from "./ui/playlistSection";
 import Tabs from "./ui/Tabs";
 
 export default function Home() {
-
   return (
     <main className="flex flex-col">
       {/* controls */}
@@ -15,5 +13,6 @@ export default function Home() {
       </div>
       {/* playlist section */}
       <PlaylistSection />
-    </main>);
+    </main>
+  );
 }
