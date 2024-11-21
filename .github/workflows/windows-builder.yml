@@ -36,8 +36,3 @@ jobs:
           files: src-tauri/target/release/bundle/msi/*.msi
         env:
           GITHUB_TOKEN: ${{ secrets.PM_BUILD_TOKEN }}
-
-      - name: Check GITHUB_TOKEN
-        run: |
-          echo "::add-mask::${{ secrets.PM_BUILD_TOKEN }}"
-          echo "GITHUB_TOKEN=${{ secrets.PM_BUILD_TOKEN }}"
