@@ -7,17 +7,14 @@
   line-height: 1.5;
   font-weight: 400;
 
-  --bg-one: black;
-  --bg-two: white;
+  --bg-one: #78B3CE;
+  --bg-two: #F5F5DC;
 
-  --ac-one: crimson;
-  --ac-two: aqua;
+  --ac-one: #F96E2A;
+  --ac-two: #78B3CE;
 
-  --border-one: black;
-  --border-two: white;
-
-  --border-ac-one: crimson;
-  --border-ac-one: aqua;
+  --border-one: #F96E2A;
+  --border-two: #C9E6F0;
 
   --text-one: black;
   --text-two: white;
@@ -29,11 +26,17 @@
 }
 
 [data-theme="dark"] {
-  --bg-two: black;
+  --bg-one: #006A67;
+  --bg-two: #1A1A1D;
 
-  --border-one: white;
+  --ac-one: #006A67;
+  --ac-two: #A0153E;
+
+  --border-one: #006A67;
+  --border-two: #FF204E;
 
   --text-one: white;
+  --text-two: white;
 }
 
 *,
