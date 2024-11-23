@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export type Button = {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -6,7 +6,7 @@ export type Button = {
   children: React.ReactNode;
 };
 
-export default function Button({ onClick, className = "", children }: Button) {
+export default function Button({ onClick, className = '', children }: Button) {
   return (
     <button
       onClick={onClick}

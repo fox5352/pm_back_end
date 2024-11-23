@@ -13,39 +13,39 @@
 // ];
 
 // eslint.config.js
-import eslintPluginReact from "eslint-plugin-react";
-import eslintPluginReactHooks from "eslint-plugin-react-hooks";
-import eslintPluginPrettier from "eslint-plugin-prettier";
-import typescriptEslintParser from "@typescript-eslint/parser";
-import typescriptEslintPlugin from "@typescript-eslint/eslint-plugin";
+import eslintPluginReact from 'eslint-plugin-react';
+import eslintPluginReactHooks from 'eslint-plugin-react-hooks';
+import eslintPluginPrettier from 'eslint-plugin-prettier';
+import typescriptEslintParser from '@typescript-eslint/parser';
+import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin';
 
 export default [
   {
-    files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
+    files: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx'],
     languageOptions: {
       parser: typescriptEslintParser,
-      ecmaVersion: "latest",
-      sourceType: "module",
+      ecmaVersion: 'latest',
+      sourceType: 'module',
       ecmaFeatures: {
         jsx: true,
       },
     },
     plugins: {
       react: eslintPluginReact,
-      "react-hooks": eslintPluginReactHooks,
+      'react-hooks': eslintPluginReactHooks,
       prettier: eslintPluginPrettier,
-      "@typescript-eslint": typescriptEslintPlugin,
+      '@typescript-eslint': typescriptEslintPlugin,
     },
     rules: {
-      "prettier/prettier": "error",
-      "react/react-in-jsx-scope": "off",
-      "@typescript-eslint/no-unused-vars": "warn",
+      'prettier/prettier': 'error',
+      'react/react-in-jsx-scope': 'off',
+      '@typescript-eslint/no-unused-vars': 'warn',
     },
     settings: {
       react: {
-        version: "detect",
+        version: 'detect',
       },
     },
-    ignores: ["node_modules/", "dist/"]
+    ignores: ['node_modules/', 'dist/'],
   },
 ];

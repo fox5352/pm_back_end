@@ -7,14 +7,14 @@
   line-height: 1.5;
   font-weight: 400;
 
-  --bg-one: #78B3CE;
-  --bg-two: #F5F5DC;
+  --bg-one: #78b3ce;
+  --bg-two: #f5f5dc;
 
-  --ac-one: #F96E2A;
-  --ac-two: #78B3CE;
+  --ac-one: #f96e2a;
+  --ac-two: #78b3ce;
 
-  --border-one: #F96E2A;
-  --border-two: #78B3CE;
+  --border-one: #f96e2a;
+  --border-two: #78b3ce;
 
   --text-one: black;
   --text-two: white;
@@ -25,15 +25,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-[data-theme="dark"] {
-  --bg-one: #006A67;
-  --bg-two: #1A1A1D;
+[data-theme='dark'] {
+  --bg-one: #006a67;
+  --bg-two: #1a1a1d;
 
-  --ac-one: #006A67;
-  --ac-two: #A0153E;
+  --ac-one: #006a67;
+  --ac-two: #a0153e;
 
-  --border-one: #006A67;
-  --border-two: #FF204E;
+  --border-one: #006a67;
+  --border-two: #ff204e;
 
   --text-one: white;
   --text-two: white;

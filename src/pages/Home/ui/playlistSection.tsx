@@ -16,14 +16,14 @@ export default function PlaylistSection() {
   const handleDragOver = (event: DragEvent) => {
     event.preventDefault();
     if (!playlistRef.current) return;
-    setIsDragging(true);
+    // setIsDragging(true);
     playlistRef.current.style.border = '2px solid orange';
   };
 
   const handleDragLeave = (event: DragEvent) => {
     event.preventDefault;
     if (!playlistRef.current) return;
-    setIsDragging(false);
+    // setIsDragging(false);
     playlistRef.current.style.border = '';
   };
 

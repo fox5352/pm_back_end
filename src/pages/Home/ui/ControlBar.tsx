@@ -2,7 +2,7 @@ import { cn } from '../../../lib/css.ts';
 
 import Button from './ControlButton.tsx';
 import useTheme from '../../../hooks/useTheme.tsx';
-import { useDisplay } from '../../../store/diaplay.ts';
+import { useDisplay } from '../../../store/display.ts';
 
 export default function ControlBar() {
   const { isLive, toggleIsLive } = useDisplay();

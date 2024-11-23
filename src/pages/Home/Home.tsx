@@ -1,6 +1,6 @@
-import ControlBar from "./ui/ControlBar";
-import PlaylistSection from "./ui/playlistSection";
-import Tabs from "./ui/Tabs";
+import ControlBar from './ui/ControlBar';
+import PlaylistSection from './ui/playlistSection';
+import Tabs from './ui/Tabs';
 
 export default function Home() {
   return (
