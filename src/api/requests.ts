@@ -1,11 +1,13 @@
-import asvJson from "../assets/asv.json"
+import asvJson from '../assets/asv.json';
 
 const asv = asvJson as unknown as AsvJson;
 
+export type Verse = {
+  [verseNumber: string]: string | undefined;
+};
+
 export type Chapter = {
-  [chapterNumber: string]: {
-    [verseNumber: string]: string | undefined;
-  };
+  [chapterNumber: string]: Verse;
 };
 
 export type Book = {
@@ -36,7 +38,7 @@ function createMeta(): MetaData {
   const { metadata } = asv;
 
   if (!metadata)
-    throw new Error("failed to get meta data from bible json file");
+    throw new Error('failed to get meta data from bible json file');
 
   return metadata as MetaData;
 }
@@ -44,11 +46,10 @@ function createMeta(): MetaData {
 function getBibleData(): Book[] {
   const { verses } = asv;
 
-  if (!verses) throw new Error("failed to get bible data from bible json file");
+  if (!verses) throw new Error('failed to get bible data from bible json file');
 
   return verses as Book[];
 }
-
 
 class BibleData {
   public metaData: MetaData;

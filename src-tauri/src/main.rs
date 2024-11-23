@@ -3,14 +3,16 @@
     windows_subsystem = "windows"
 )]
 
-// #[tauri::command]
-// fn greet(name: &str) -> String {
-//     format!("Hello, {}! You've been greeted from Rust!", name)
-// }
-
 fn main() {
     tauri::Builder::default()
+        .setup(|_app|{
+        //     let _secondary_window = tauri::WindowBuilder::new(
+        //         _app, "live view",
+        //         tauri::WindowUrl::App("/live".into())
+        //     ).build()?;
+        //
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
-
