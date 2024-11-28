@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Slide, usePlaylist } from '../../../store/playlist';
+import { Content, Slide, usePlaylist, VerseSlide } from '../../../store/playlist';
 import { cn } from '../../../lib/css';
 
 type PlaylistSlideBox = Slide & {
@@ -56,18 +56,25 @@ export default function PlaylistSlideBox({
     }, 600);
 
     //extract data
-    const data: { type: string; payload: string } = JSON.parse(
+    const data = JSON.parse(
       event.dataTransfer?.getData('text/plain') || ''
     );
 
-    if (data.type === 'add_text') {
-      const slide = {
+    if (data?.type === 'add_verse') {
+      const { payload } = data as VerseSlide;
+      const newText: Content[] = [
+        { tag: 'h2', content: `${payload.book_name} ${payload.chapter_num}:${payload.verse_num}` },
+        { tag: 'p', content: payload.text }
+      ]
+
+      const slide: Slide = {
         id,
-        text: text + '\n' + data.payload,
+        text: [...text, ...newText],
+        bg: null
       };
 
       updateSlide(slide);
-    } else if (data.type === 'add_bg') {
+    } else if (data?.type === 'add_bg') {
       // TODO: add bg update
       return;
     }
@@ -98,14 +105,30 @@ export default function PlaylistSlideBox({
     };
   }, []);
 
+  const mapper = (data: Content) => {
+    const id = `${Math.round(Math.random() * 999)}-${Math.round(Math.random() * 999)}`
+    const { tag, content } = data;
+
+    switch (tag) {
+      case "h2":
+        return <h2 key={id} className='text-xl font-semibold'>{content}</h2>
+      case 'h1':
+        return <h1 key={id} className='text-xl font-semibold'>{content}</h1>
+      case 'p':
+        return <p key={id} className='text-md'>{content}</p>
+      default:
+        return <div key={id}>{content}</div>
+    }
+  }
+
   return (
     <button
       draggable
       ref={buttonRef}
       onClick={toggleCurrentSlide}
-      className={`flex flex-shrink-0 justify-center items-center h-full w-[300px] text-lg overflow-y-auto border-l-2 border-r-2 border-b-2 border-[--border-two] ${cn(playlistIndex == index, 'bg-[--ac-one] text-[--text-two] !border-[--border-one]')} duration-200 transition-all ease-linear`}
+      className={`flex flex-col flex-shrink-0 justify-center items-center space-y-0.5 h-full w-[300px] text-lg overflow-y-auto border-l-2 border-r-2 border-b-2 border-[--border-two] ${cn(playlistIndex == index, 'bg-[--ac-one] text-[--text-two] !border-[--border-one]')} duration-200 transition-all ease-linear`}
     >
-      {text}
+      {text.map(mapper)}
     </button>
   );
 }

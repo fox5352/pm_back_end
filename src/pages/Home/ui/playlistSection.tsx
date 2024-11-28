@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { usePlaylist } from '../../../store/playlist';
+import { Slide, usePlaylist, VerseSlide } from '../../../store/playlist';
 import { cn } from '../../../lib/css';
 import PlaylistSlideBox from './PlaylistSlideBox';
 
 export default function PlaylistSection() {
   // refs
   const playlistRef = useRef<HTMLDivElement>(null);
-  // local state
-  const [isDragging, setIsDragging] = useState(false);
   // stores
   const { list, addSlide } = usePlaylist();
 
@@ -16,22 +14,18 @@ export default function PlaylistSection() {
   const handleDragOver = (event: DragEvent) => {
     event.preventDefault();
     if (!playlistRef.current) return;
-    // setIsDragging(true);
     playlistRef.current.style.border = '2px solid orange';
   };
 
   const handleDragLeave = (event: DragEvent) => {
     event.preventDefault;
     if (!playlistRef.current) return;
-    // setIsDragging(false);
     playlistRef.current.style.border = '';
   };
 
   const handleDragDrop = (event: DragEvent) => {
     event.preventDefault();
     if (!playlistRef.current) return;
-
-    setIsDragging(false);
 
     //color waring success
     playlistRef.current.style.border = '2px solid green';
@@ -41,14 +35,22 @@ export default function PlaylistSection() {
     }, 600);
 
     //extract data
-    const data: { type: string; payload: string } = JSON.parse(
+    const data = JSON.parse(
       event.dataTransfer?.getData('text/plain') || ''
     );
 
-    if (data.type === 'add_text') {
-      const slide = {
+    if (data?.type === 'add_verse') {
+      const { payload: {
+        book_name, chapter_num,
+        verse_num, text }
+      }: VerseSlide = data;
+
+      const slide: Slide = {
         id: `${Math.round(Math.random() * 999)}${Math.round(Math.random() * 999)}`,
-        text: data.payload,
+        text: [
+          { tag: "h2", content: `${book_name} ${chapter_num}:${verse_num}` },
+          { tag: 'p', content: text }
+        ],
         bg: null,
       };
 
@@ -72,19 +74,17 @@ export default function PlaylistSection() {
     };
   }, []);
 
-  useEffect(() => {
-    console.log(list);
-  }, [list]);
 
   return (
     <div
       ref={playlistRef}
       id="playlist-container"
-      className={`flex h-[35vh] px-0.5 border-t-2 border-[--border-one] overflow-x-auto duration-200 transition-all ease-linear ${cn(isDragging, 'pl-10')}`}
+      className={`flex h-[35vh] px-0.5 border-t-2 border-[--border-one] overflow-x-auto duration-200 transition-all ease-linear `}
     >
       {list.map((data, index) => (
         <PlaylistSlideBox key={data.id} index={index} {...data} />
       ))}
+      <div className='flex flex-grow h-full min-w-40 overflow-hidden border-2 border-green-500'></div>
     </div>
   );
 }

@@ -1,8 +1,29 @@
 import { create } from 'zustand';
 
+export type VerseSlide = {
+  type: string,
+  payload: {
+    book_name: string;
+    chapter_name: string;
+    chapter_num: string;
+    verse_num: string;
+    text: string;
+  }
+}
+
+export type SongSlide = {
+  type: string;
+  payload: unknown;// TODO: impl later
+}
+
+export type Content = {
+  tag: "h2" | "h1" | "p";
+  content: string
+}
+
 export type Slide = {
   id: string;
-  text: string;
+  text: Content[];
   bg: string | null;
 };
 
@@ -15,17 +36,9 @@ export type Playlist = {
 type Actions = {
   setIndex: (data: number | null) => void;
   setBg: (data: string | null) => void;
-  addSlide: ({ id, text }: { id: string; text: string }) => void;
+  addSlide: (data: Slide) => void;
   removeSlide: (id: string) => void;
-  updateSlide: ({
-    id,
-    text,
-    bg,
-  }: {
-    id?: string;
-    text?: string;
-    bg?: string;
-  }) => void;
+  updateSlide: (data: Slide) => void;
 };
 
 export const usePlaylist = create<Playlist & Actions>()((set) => ({
@@ -52,7 +65,7 @@ export const usePlaylist = create<Playlist & Actions>()((set) => ({
         if (slide.id === data.id) {
           buffer[index] = {
             id: data.id ? data.id : slide.id,
-            text: data.text ? data.text : slide.text,
+            text: data.text,
             bg: data.bg ? data.bg : slide.bg,
           };
           break;
