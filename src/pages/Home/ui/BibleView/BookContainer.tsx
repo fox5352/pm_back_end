@@ -1,11 +1,13 @@
 import { useMemo, useState } from 'react';
 import { Book } from '../../../../api/requests';
 import ChapterContainer from './ChapterContainer';
+import { cn } from '../../../../lib/css';
 
 type BookContainer = Book & {};
 
 export default function BookContainer({ book_name, chapters }: BookContainer) {
   const [isActive, setIsActive] = useState<boolean>(false);
+
   const formattedChapters = useMemo(
     () =>
       Object.entries(chapters).map((data) => ({
@@ -24,7 +26,7 @@ export default function BookContainer({ book_name, chapters }: BookContainer) {
       <button
         onClick={toggle}
         id={`${book_name}`}
-        className="w-full p-0.5 px-1 text-start hover:border-[--ac-one] hover:bg-[--ac-one] hover:text-[--text-two] duration-100 transition-all ease-linear"
+        className={`w-full p-0.5 px-1 text-start hover:border-[--ac-one] hover:bg-[--ac-one] hover:text-[--text-two] duration-100 transition-all ease-linear ${cn(isActive, "bg-[--ac-two] text-[--text-two]")} duration-200 transition-all ease-linear`}
       >
         {book_name}
       </button>

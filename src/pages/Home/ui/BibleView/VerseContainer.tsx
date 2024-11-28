@@ -1,15 +1,19 @@
 import { useEffect, useRef } from 'react';
 
-type VerseContainer = {
+export type Verse = {
   book_name: string;
   chapter_name: string;
+  chapter_num: string;
   verse_num: string;
   text: string;
-};
+}
+
+export type VerseContainer = Verse;
 
 export default function VerseContainer({
   book_name,
   chapter_name,
+  chapter_num,
   verse_num,
   text,
 }: VerseContainer) {
@@ -18,9 +22,17 @@ export default function VerseContainer({
   const handleDragStart = (event: DragEvent) => {
     if (!pRef.current) return;
     const data = {
-      type: 'add_text',
-      payload: pRef.current?.textContent,
+      type: 'add_verse',
+      payload: {
+        book_name,
+        chapter_name,
+        chapter_num,
+        verse_num,
+        text,
+      }
     };
+
+    console.log(JSON.stringify(data));
 
     event.dataTransfer?.setData('text/plain', JSON.stringify(data));
 
@@ -48,9 +60,9 @@ export default function VerseContainer({
       ref={pRef}
       id={`${book_name}:${chapter_name}:${verse_num}`}
       draggable
-      className="w-full p-0.5 px-2 text-start border-b-2 border-[--border-two] hover:bg-[--ac-two] hover:text-[--text-two] duration-100 transition-all ease-linear"
+      className="w-full p-0.5 px-2 pl-3 text-start border-b-2 border-[--border-two] hover:bg-[--ac-two] hover:text-[--text-two] duration-100 transition-all ease-linear"
     >
-      {text}
+      {verse_num}: {text}
     </p>
   );
 }

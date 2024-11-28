@@ -13,9 +13,11 @@ type ChapterContainer = {
 export default function ChapterContainer({
   book_name,
   chapter_name,
+  chapter_num,
   verses,
 }: ChapterContainer) {
   const [isActive, setIsActive] = useState(false);
+
   const formattedVerses = useMemo(
     () =>
       Object.entries(verses).map((data) => ({
@@ -32,9 +34,9 @@ export default function ChapterContainer({
       <button
         onClick={toggle}
         id={`${book_name}:${chapter_name}`}
-        className={`w-full p-0.5 px-1 text-start hover:border-[--border-one] hover:bg-[--ac-one] hover:text-[--text-two] duration-100 transition-all ease-linear first-letter:capitalize ${cn(isActive, 'border-[--ac-one] bg-[--ac-one] text-[--text-two]')}`}
+        className={`w-full p-0.5 px-1 pl-2 text-start hover:border-[--border-one] hover:bg-[--ac-two] hover:text-[--text-two] duration-100 transition-all ease-linear first-letter:capitalize ${cn(isActive, 'border-[--ac-one] bg-[--ac-one] text-[--text-two]')}`}
       >
-        {chapter_name}
+        {book_name + " " + chapter_num}
       </button>
       <div
         className={`flex flex-col w-full border-t-2 border-[--border-one] overflow-hidden ${cn(isActive, 'scale-100', ' hidden scale-0')}`}
@@ -44,6 +46,7 @@ export default function ChapterContainer({
             key={index}
             book_name={book_name}
             chapter_name={chapter_name}
+            chapter_num={chapter_name}
             verse_num={data.verse_num}
             text={data.text || ''}
           />
