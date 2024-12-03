@@ -6,7 +6,7 @@ export type Verse = {
   chapter_num: string;
   verse_num: string;
   text: string;
-}
+};
 
 export type VerseContainer = Verse;
 
@@ -29,10 +29,8 @@ export default function VerseContainer({
         chapter_num,
         verse_num,
         text,
-      }
+      },
     };
-
-    console.log(JSON.stringify(data));
 
     event.dataTransfer?.setData('text/plain', JSON.stringify(data));
 

@@ -1,25 +1,25 @@
-import { create } from 'zustand';
+import { get } from './invoke';
 
 export type VerseSlide = {
-  type: string,
+  type: string;
   payload: {
     book_name: string;
     chapter_name: string;
     chapter_num: string;
     verse_num: string;
     text: string;
-  }
-}
+  };
+};
 
 export type SongSlide = {
   type: string;
-  payload: unknown;// TODO: impl later
-}
+  payload: unknown; // TODO: impl later
+};
 
 export type Content = {
-  tag: "h2" | "h1" | "p";
-  content: string
-}
+  tag: 'h2' | 'h1' | 'p';
+  content: string;
+};
 
 export type Slide = {
   id: string;
@@ -33,45 +33,80 @@ export type Playlist = {
   index: number | null;
 };
 
-type Actions = {
-  setIndex: (data: number | null) => void;
-  setBg: (data: string | null) => void;
-  addSlide: (data: Slide) => void;
-  removeSlide: (id: string) => void;
-  updateSlide: (data: Slide) => void;
-};
+export async function setIndex(idx: number | null) {
+  const res = await get('set_index', { idx });
 
-export const usePlaylist = create<Playlist & Actions>()((set) => ({
-  list: [],
-  bg: null,
-  index: null,
-  setIndex: (data) => set((state) => ({ ...state, index: data })),
-  setBg: (data) => set((state) => ({ ...state, bg: data })),
-  addSlide: (data) =>
-    set((state) => ({
-      ...state,
-      list: [...state.list, { ...data, bg: null }],
-    })),
-  removeSlide: (data) =>
-    set((state) => ({
-      ...state,
-      list: state.list.filter((item) => item.id != data),
-    })),
-  updateSlide: (data) =>
-    set((state) => {
-      let buffer = state.list;
-      for (let index = 0; index < buffer.length; index++) {
-        const slide = buffer[index];
-        if (slide.id === data.id) {
-          buffer[index] = {
-            id: data.id ? data.id : slide.id,
-            text: data.text,
-            bg: data.bg ? data.bg : slide.bg,
-          };
-          break;
-        }
-      }
+  if (res.error) {
+    console.error('Failed to set index:', res.message);
+    return;
+  }
+}
 
-      return { ...state, list: buffer };
-    }),
-}));
+export async function setBg(bg: string | null) {
+  const res = await get('set_bg', { bg });
+
+  if (res.error) {
+    console.error('Failed to set background:', res.message);
+    return;
+  }
+}
+
+export async function addSlide(slide: Slide) {
+  const res = await get('add_slide', { slide });
+
+  if (res.error) {
+    console.error('Failed to add slide:', res.message);
+    return;
+  }
+}
+
+export async function removeSlide(id: string) {
+  const res = await get('remove_slide', { id });
+
+  if (res.error) {
+    console.error('Failed to remove slide:', res.message);
+    return;
+  }
+}
+
+export async function updateSlide(slide: Slide) {
+  const res = await get('update_slide', { slide });
+
+  if (res.error) {
+    console.error('Failed to update slide:', res.message);
+    return;
+  }
+}
+
+export async function getList(): Promise<Slide[] | []> {
+  const res = await get<Slide[]>('get_list');
+
+  if (res.error) {
+    console.error('Failed to get playlist:', res.message);
+    return [];
+  } else {
+    return res.data;
+  }
+}
+
+export async function getBg(): Promise<string | null> {
+  const res = await get<string | null>('get_bg');
+
+  if (res.error) {
+    console.error('Failed to get live status:', res.message);
+    return null;
+  } else {
+    return res.data;
+  }
+}
+
+export async function getIndex(): Promise<number | null> {
+  const res = await get<number | null>('get_index');
+
+  if (res.error) {
+    console.error('Failed to get index:', res.message);
+    return null;
+  } else {
+    return res.data;
+  }
+}

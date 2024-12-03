@@ -26,7 +26,7 @@ export default function BookContainer({ book_name, chapters }: BookContainer) {
       <button
         onClick={toggle}
         id={`${book_name}`}
-        className={`w-full p-0.5 px-1 text-start hover:border-[--ac-one] hover:bg-[--ac-one] hover:text-[--text-two] duration-100 transition-all ease-linear ${cn(isActive, "bg-[--ac-two] text-[--text-two]")} duration-200 transition-all ease-linear`}
+        className={`w-full p-0.5 px-1 text-start hover:border-[--ac-one] hover:bg-[--ac-one] hover:text-[--text-two] duration-100 transition-all ease-linear ${cn(isActive, 'bg-[--ac-two] text-[--text-two]')} duration-200 transition-all ease-linear`}
       >
         {book_name}
       </button>

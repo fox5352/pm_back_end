@@ -36,7 +36,7 @@ export default function ChapterContainer({
         id={`${book_name}:${chapter_name}`}
         className={`w-full p-0.5 px-1 pl-2 text-start hover:border-[--border-one] hover:bg-[--ac-two] hover:text-[--text-two] duration-100 transition-all ease-linear first-letter:capitalize ${cn(isActive, 'border-[--ac-one] bg-[--ac-one] text-[--text-two]')}`}
       >
-        {book_name + " " + chapter_num}
+        {book_name + ' ' + chapter_num}
       </button>
       <div
         className={`flex flex-col w-full border-t-2 border-[--border-one] overflow-hidden ${cn(isActive, 'scale-100', ' hidden scale-0')}`}

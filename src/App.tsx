@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 
 import './App.css';
 
@@ -9,11 +9,17 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<Home />} />
-        <Route path="live" element={<Live />} />
+        <Route path="/" element={<RootLayout />}>
+          <Route index element={<Home />} />
+          <Route path="live" element={<Live />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
+}
+
+function RootLayout() {
+  return <Outlet />;
 }
 
 export default App;

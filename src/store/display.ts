@@ -1,14 +1,21 @@
-import { create } from 'zustand';
+import { Package, get } from './invoke';
 
-type State = {
-  isLive: boolean;
-};
+export async function get_is_live(): Promise<boolean | null> {
+  let res: Package<boolean> = await get('get_is_live');
 
-type Actions = {
-  toggleIsLive: () => void;
-};
+  if (res.error) {
+    console.error('Failed to get live status:', res.message);
+    return null;
+  } else {
+    return res.data;
+  }
+}
 
-export const useDisplay = create<State & Actions>()((set) => ({
-  isLive: false,
-  toggleIsLive: () => set((state) => ({ ...state, isLive: !state.isLive })),
-}));
+export async function toggle_live() {
+  const res = await get('toggle_is_live');
+
+  if (res.error) {
+    console.error('Failed to toggle live status:', res.message);
+    return;
+  }
+}

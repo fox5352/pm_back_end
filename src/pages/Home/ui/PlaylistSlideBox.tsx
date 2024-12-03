@@ -1,5 +1,13 @@
-import { useEffect, useRef } from 'react';
-import { Content, Slide, usePlaylist, VerseSlide } from '../../../store/playlist';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
+import {
+  Content,
+  Slide,
+  VerseSlide,
+  setIndex,
+  removeSlide,
+  updateSlide,
+  getIndex,
+} from '../../../store/playlist';
 import { cn } from '../../../lib/css';
 
 type PlaylistSlideBox = Slide & {
@@ -11,18 +19,25 @@ export default function PlaylistSlideBox({
   index,
   text,
 }: PlaylistSlideBox) {
+  const [playlistIndex, setPlaylistIndex] = useState<number | null>(null);
   // refs
   const buttonRef = useRef<HTMLButtonElement>(null);
-  //store
-  const {
-    setIndex,
-    removeSlide,
-    updateSlide,
-    index: playlistIndex,
-  } = usePlaylist();
+
+  useEffect(() => {
+    let timer: any = undefined;
+    if (!timer) {
+      timer = setInterval(async () => {
+        setPlaylistIndex(await getIndex());
+      }, 250);
+    }
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
   const toggleCurrentSlide = () => {
-    if (playlistIndex === index) {
+    if (playlistIndex == index) {
       setIndex(null);
     } else {
       setIndex(index);
@@ -56,21 +71,22 @@ export default function PlaylistSlideBox({
     }, 600);
 
     //extract data
-    const data = JSON.parse(
-      event.dataTransfer?.getData('text/plain') || ''
-    );
+    const data = JSON.parse(event.dataTransfer?.getData('text/plain') || '');
 
     if (data?.type === 'add_verse') {
       const { payload } = data as VerseSlide;
       const newText: Content[] = [
-        { tag: 'h2', content: `${payload.book_name} ${payload.chapter_num}:${payload.verse_num}` },
-        { tag: 'p', content: payload.text }
-      ]
+        {
+          tag: 'h2',
+          content: `${payload.book_name} ${payload.chapter_num}:${payload.verse_num}`,
+        },
+        { tag: 'p', content: payload.text },
+      ];
 
       const slide: Slide = {
         id,
         text: [...text, ...newText],
-        bg: null
+        bg: null,
       };
 
       updateSlide(slide);
@@ -86,6 +102,13 @@ export default function PlaylistSlideBox({
     if (playlistIndex == index) {
       setIndex(null);
     }
+    removeSlide(id);
+  };
+
+  const handleDBClick = (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    toggleCurrentSlide();
     removeSlide(id);
   };
 
@@ -106,26 +129,39 @@ export default function PlaylistSlideBox({
   }, []);
 
   const mapper = (data: Content) => {
-    const id = `${Math.round(Math.random() * 999)}-${Math.round(Math.random() * 999)}`
+    const id = `${Math.round(Math.random() * 999)}-${Math.round(Math.random() * 999)}`;
     const { tag, content } = data;
 
     switch (tag) {
-      case "h2":
-        return <h2 key={id} className='text-xl font-semibold'>{content}</h2>
+      case 'h2':
+        return (
+          <h2 key={id} className="text-xl font-semibold">
+            {content}
+          </h2>
+        );
       case 'h1':
-        return <h1 key={id} className='text-xl font-semibold'>{content}</h1>
+        return (
+          <h1 key={id} className="text-xl font-semibold">
+            {content}
+          </h1>
+        );
       case 'p':
-        return <p key={id} className='text-md'>{content}</p>
+        return (
+          <p key={id} className="text-md">
+            {content}
+          </p>
+        );
       default:
-        return <div key={id}>{content}</div>
+        return <div key={id}>{content}</div>;
     }
-  }
+  };
 
   return (
     <button
       draggable
       ref={buttonRef}
       onClick={toggleCurrentSlide}
+      onDoubleClick={handleDBClick}
       className={`flex flex-col flex-shrink-0 justify-center items-center space-y-0.5 h-full w-[300px] text-lg overflow-y-auto border-l-2 border-r-2 border-b-2 border-[--border-two] ${cn(playlistIndex == index, 'bg-[--ac-one] text-[--text-two] !border-[--border-one]')} duration-200 transition-all ease-linear`}
     >
       {text.map(mapper)}

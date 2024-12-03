@@ -1,14 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { Slide, usePlaylist, VerseSlide } from '../../../store/playlist';
-import { cn } from '../../../lib/css';
+import { Slide, addSlide, getList, VerseSlide } from '../../../store/playlist';
 import PlaylistSlideBox from './PlaylistSlideBox';
 
 export default function PlaylistSection() {
+  const [list, setList] = useState<Slide[]>([]);
   // refs
   const playlistRef = useRef<HTMLDivElement>(null);
   // stores
-  const { list, addSlide } = usePlaylist();
+
+  useEffect(() => {
+    let timer: any = undefined;
+    if (!timer) {
+      timer = setInterval(async () => {
+        setList(await getList());
+      }, 250);
+    }
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
   // handlers for drag and drop events
   const handleDragOver = (event: DragEvent) => {
@@ -35,21 +47,18 @@ export default function PlaylistSection() {
     }, 600);
 
     //extract data
-    const data = JSON.parse(
-      event.dataTransfer?.getData('text/plain') || ''
-    );
+    const data = JSON.parse(event.dataTransfer?.getData('text/plain') || '');
 
     if (data?.type === 'add_verse') {
-      const { payload: {
-        book_name, chapter_num,
-        verse_num, text }
+      const {
+        payload: { book_name, chapter_num, verse_num, text },
       }: VerseSlide = data;
 
       const slide: Slide = {
         id: `${Math.round(Math.random() * 999)}${Math.round(Math.random() * 999)}`,
         text: [
-          { tag: "h2", content: `${book_name} ${chapter_num}:${verse_num}` },
-          { tag: 'p', content: text }
+          { tag: 'h2', content: `${book_name} ${chapter_num}:${verse_num}` },
+          { tag: 'p', content: text },
         ],
         bg: null,
       };
@@ -74,7 +83,6 @@ export default function PlaylistSection() {
     };
   }, []);
 
-
   return (
     <div
       ref={playlistRef}
@@ -84,7 +92,7 @@ export default function PlaylistSection() {
       {list.map((data, index) => (
         <PlaylistSlideBox key={data.id} index={index} {...data} />
       ))}
-      <div className='flex flex-grow h-full min-w-40 overflow-hidden border-2 border-green-500'></div>
+      <div className="flex flex-grow h-full min-w-40 overflow-hidden border-2 border-green-500"></div>
     </div>
   );
 }
