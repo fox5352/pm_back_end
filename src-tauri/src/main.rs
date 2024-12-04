@@ -3,10 +3,11 @@
     windows_subsystem = "windows"
 )]
 
-use pm_manager::{
+use pm_manager::store::{
     display::DisplayHook,
     playlist::{PlayListHook, Slide},
 };
+
 use std::sync::{Mutex, OnceLock};
 
 static DISPLAY_HOOK: OnceLock<Mutex<DisplayHook>> = OnceLock::new();
@@ -16,7 +17,7 @@ static PLAYLIST_HOOK: OnceLock<Mutex<PlayListHook>> = OnceLock::new();
 struct Package<T> {
     data: Option<T>,
     message: String,
-    error: bool
+    error: bool,
 }
 
 // ------------------------------------------ display hook ------------------------------------------
