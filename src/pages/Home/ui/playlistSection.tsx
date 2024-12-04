@@ -69,7 +69,6 @@ export default function PlaylistSection() {
     }
   };
 
-
   return (
     <div
       ref={playlistRef}

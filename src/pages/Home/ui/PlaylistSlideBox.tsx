@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Content,
   Slide,
@@ -115,28 +115,23 @@ export default function PlaylistSlideBox({
     const id = `${Math.round(Math.random() * 999)}-${Math.round(Math.random() * 999)}`;
     const { tag, content } = data;
 
-    const handleClick = (event: React.MouseEvent) => {
-      // Ensure event propagation to parent
-      console.log('Child clicked');
-      // No event.stopPropagation() unless absolutely needed
-    };
 
     switch (tag) {
       case 'h2':
         return (
-          <h2 key={id} className="text-xl font-semibold" onClick={handleClick}>
+          <h2 key={id} className="text-xl font-semibold">
             {content}
           </h2>
         );
       case 'h1':
         return (
-          <h1 key={id} className="text-xl font-semibold" onClick={handleClick}>
+          <h1 key={id} className="text-xl font-semibold">
             {content}
           </h1>
         );
       case 'p':
         return (
-          <p key={id} className="text-md" onClick={handleClick}>
+          <p key={id} className="text-md">
             {content}
           </p>
         );
