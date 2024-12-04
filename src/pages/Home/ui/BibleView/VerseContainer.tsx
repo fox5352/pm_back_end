@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 
 export type Verse = {
   book_name: string;
@@ -19,7 +19,7 @@ export default function VerseContainer({
 }: VerseContainer) {
   const pRef = useRef<HTMLParagraphElement>(null);
 
-  const handleDragStart = (event: DragEvent) => {
+  const handleDragStart = (event: React.DragEvent) => {
     if (!pRef.current) return;
     const data = {
       type: 'add_verse',
@@ -36,28 +36,18 @@ export default function VerseContainer({
 
     pRef.current.style.opacity = '0.5';
   };
-  const handleDragEnd = (event: DragEvent) => {
+  const handleDragEnd = (event: React.DragEvent) => {
     event.preventDefault();
     if (pRef.current) pRef.current.style.opacity = '1';
   };
-
-  useEffect(() => {
-    if (pRef.current) {
-      pRef.current.addEventListener('dragstart', handleDragStart);
-
-      pRef.current.addEventListener('dragend', handleDragEnd);
-    }
-    return () => {
-      pRef.current?.removeEventListener('dragstart', handleDragStart);
-      pRef.current?.removeEventListener('dragend', handleDragEnd);
-    };
-  }, []);
 
   return (
     <p
       ref={pRef}
       id={`${book_name}:${chapter_name}:${verse_num}`}
       draggable
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
       className="w-full p-0.5 px-2 pl-3 text-start border-b-2 border-[--border-two] hover:bg-[--ac-two] hover:text-[--text-two] duration-100 transition-all ease-linear"
     >
       {verse_num}: {text}

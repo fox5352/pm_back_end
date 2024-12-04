@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { Slide, addSlide, getList, VerseSlide } from '../../../store/playlist';
 import PlaylistSlideBox from './PlaylistSlideBox';
@@ -23,19 +23,19 @@ export default function PlaylistSection() {
   }, []);
 
   // handlers for drag and drop events
-  const handleDragOver = (event: DragEvent) => {
+  const handleDragOver = (event: React.DragEvent) => {
     event.preventDefault();
     if (!playlistRef.current) return;
     playlistRef.current.style.border = '2px solid orange';
   };
 
-  const handleDragLeave = (event: DragEvent) => {
-    event.preventDefault;
+  const handleDragLeave = (event: React.DragEvent) => {
+    event.preventDefault();
     if (!playlistRef.current) return;
     playlistRef.current.style.border = '';
   };
 
-  const handleDragDrop = (event: DragEvent) => {
+  const handleDragDrop = (event: React.DragEvent) => {
     event.preventDefault();
     if (!playlistRef.current) return;
 
@@ -69,24 +69,14 @@ export default function PlaylistSection() {
     }
   };
 
-  useEffect(() => {
-    if (playlistRef.current) {
-      playlistRef.current.addEventListener('dragover', handleDragOver);
-      playlistRef.current.addEventListener('dragleave', handleDragLeave);
-      playlistRef.current.addEventListener('drop', handleDragDrop);
-    }
-
-    return () => {
-      playlistRef.current?.removeEventListener('dragover', handleDragOver);
-      playlistRef.current?.removeEventListener('dragleave', handleDragLeave);
-      playlistRef.current?.removeEventListener('drop', handleDragDrop);
-    };
-  }, []);
 
   return (
     <div
       ref={playlistRef}
       id="playlist-container"
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDragDrop}
       className={`flex h-[35vh] px-0.5 border-t-2 border-[--border-one] overflow-x-auto duration-200 transition-all ease-linear `}
     >
       {list.map((data, index) => (
