@@ -115,7 +115,6 @@ export default function PlaylistSlideBox({
     const id = `${Math.round(Math.random() * 999)}-${Math.round(Math.random() * 999)}`;
     const { tag, content } = data;
 
-
     switch (tag) {
       case 'h2':
         return (

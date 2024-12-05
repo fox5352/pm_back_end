@@ -19,7 +19,11 @@ function App() {
 }
 
 function RootLayout() {
-  return <Outlet />;
+  return (
+    <div data-tauri-drag-region>
+      <Outlet />
+    </div>
+  );
 }
 
 export default App;
