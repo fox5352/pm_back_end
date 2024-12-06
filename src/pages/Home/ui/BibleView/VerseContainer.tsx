@@ -1,6 +1,13 @@
 import React, { useRef } from 'react';
 
-import { addSlide, updateSlide, getListItem, Slide, Content, getIndex } from "../../../../store/playlist"
+import {
+  addSlide,
+  updateSlide,
+  getListItem,
+  Slide,
+  Content,
+  getIndex,
+} from '../../../../store/playlist';
 
 export type Verse = {
   book_name: string;
@@ -10,8 +17,7 @@ export type Verse = {
   text: string;
 };
 
-export type VerseContainer = Verse & {
-};
+export type VerseContainer = Verse & {};
 
 export default function VerseContainer({
   book_name,
@@ -39,13 +45,11 @@ export default function VerseContainer({
 
     const index = await getIndex();
 
-
     if (index !== null) {
-
       const res: Slide | null = await getListItem(index);
 
       if (res === null) {
-        addSlide(newSlide)
+        addSlide(newSlide);
       } else {
         const newText: Content[] = [
           {
@@ -58,15 +62,14 @@ export default function VerseContainer({
         const updatedSlide: Slide = {
           ...res,
           text: [...res.text, ...newText],
-        }
+        };
 
         updateSlide(updatedSlide);
       }
-
     } else {
       addSlide(newSlide);
     }
-  }
+  };
 
   const handleDragStart = (event: React.DragEvent) => {
     if (!pRef.current) return;
