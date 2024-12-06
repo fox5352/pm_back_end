@@ -1,11 +1,11 @@
 import { Package, get } from './invoke';
 
-export async function get_is_live(): Promise<boolean | null> {
+export async function get_is_live(): Promise<boolean> {
   let res: Package<boolean> = await get('get_is_live');
 
   if (res.error) {
     console.error('Failed to get live status:', res.message);
-    return null;
+    return false;
   } else {
     return res.data;
   }

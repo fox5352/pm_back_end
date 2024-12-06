@@ -27,25 +27,9 @@ export default function DisplayScreen({
 
   useEffect(() => {
     let timer: any = undefined;
-
     if (!timer) {
       timer = setInterval(async () => {
-        const res = await get_is_live();
-
-        if (!res) return;
-
-        setIsLive(res); // update isLive State
-      }, 250);
-    }
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
-
-  useEffect(() => {
-    let timer: any = undefined;
-    if (!timer) {
-      timer = setInterval(async () => {
+        setIsLive(await get_is_live())
         setList(await getList()); // update playlist State
         setIndex(await getIndex()); // update currentSlide State
         setBg(await getBg()); // update bg State
@@ -79,13 +63,13 @@ export default function DisplayScreen({
         } else if (bg) {
           bodyRef.current.style.backgroundImage = `src(${bg})`;
         }
-
         //
       }
     }
-  }, [bodyRef, list, index, preview, isLive, bg]);
+  }, [isLive, bodyRef, list, index, preview, bg]);
 
   const mapper = (data: Content) => {
+
     const id = `${Math.round(Math.random() * 999)}-${Math.round(Math.random() * 999)}`;
     const { tag, content } = data;
 
