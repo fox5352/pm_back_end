@@ -79,7 +79,7 @@ export default function PlaylistSection() {
       className={`flex h-[35vh] px-0.5 border-t-2 border-[--border-one] overflow-x-auto duration-200 transition-all ease-linear `}
     >
       {list.map((data, index) => (
-        <PlaylistSlideBox key={data.id} index={index} {...data} />
+        <PlaylistSlideBox key={`${data.id}:${index}`} index={index} {...data} />
       ))}
       <div className="flex flex-grow h-full min-w-40 overflow-hidden border-2 border-green-500"></div>
     </div>

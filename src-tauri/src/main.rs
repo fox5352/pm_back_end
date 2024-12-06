@@ -274,6 +274,38 @@ fn get_list() -> Package<Vec<Slide>> {
     }
 }
 
+#[tauri::command]
+fn get_list_item(index: usize) -> Package<Slide> {
+    if let Some(hook) = PLAYLIST_HOOK.get() {
+        if let Ok(hook) = hook.lock() {
+            return match hook.list.get(index) {
+                Some(data) => Package {
+                    data: Option::Some(data.clone()),
+                    message: format!(""),
+                    error: false,
+                },
+                None => Package {
+                    data: None,
+                    message: format!("faild to get item with index provided: {}", index),
+                    error: true,
+                },
+            };
+        } else {
+            return Package {
+                data: None,
+                message: format!("Failed to lock playlist hook"),
+                error: true,
+            };
+        }
+    } else {
+        Package {
+            data: None,
+            message: String::from("Playlist hook not initialized"),
+            error: true,
+        }
+    }
+}
+
 /// Retrieves the background of the playlist.
 ///
 /// # Returns
@@ -359,6 +391,7 @@ fn main() {
             update_slide,
             // getters
             get_list,
+            get_list_item,
             get_bg,
             get_index
         ])

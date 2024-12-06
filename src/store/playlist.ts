@@ -89,6 +89,17 @@ export async function getList(): Promise<Slide[] | []> {
   }
 }
 
+export async function getListItem(index: number): Promise<Slide | null> {
+  const res = await get<Slide>('get_list_item', { index });
+
+  if (res.error) {
+    console.error('Failed to get list item:', res.message);
+    return null;
+  } else {
+    return res.data;
+  }
+}
+
 export async function getBg(): Promise<string | null> {
   const res = await get<string | null>('get_bg');
 
