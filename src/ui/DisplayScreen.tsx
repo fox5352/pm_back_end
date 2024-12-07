@@ -29,7 +29,7 @@ export default function DisplayScreen({
     let timer: any = undefined;
     if (!timer) {
       timer = setInterval(async () => {
-        setIsLive(await get_is_live())
+        setIsLive(await get_is_live());
         setList(await getList()); // update playlist State
         setIndex(await getIndex()); // update currentSlide State
         setBg(await getBg()); // update bg State
@@ -69,7 +69,6 @@ export default function DisplayScreen({
   }, [isLive, bodyRef, list, index, preview, bg]);
 
   const mapper = (data: Content) => {
-
     const id = `${Math.round(Math.random() * 999)}-${Math.round(Math.random() * 999)}`;
     const { tag, content } = data;
 
