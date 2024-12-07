@@ -1,11 +1,16 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Book } from '../../../../api/requests';
 import ChapterContainer from './ChapterContainer';
 import { cn } from '../../../../lib/css';
+import { SearchResult } from '../../../../lib/fuzz';
 
-type BookContainer = Book & {};
+type BookContainer = Book & {
+  searchResults: SearchResult
+  scrollHandler: (target: HTMLElement | null) => void
+};
 
-export default function BookContainer({ book_name, chapters }: BookContainer) {
+export default function BookContainer({ book_name, chapters, searchResults, scrollHandler }: BookContainer) {
+  const bRef = useRef<HTMLButtonElement>(null);
   const [isActive, setIsActive] = useState<boolean>(false);
 
   const formattedChapters = useMemo(
@@ -21,10 +26,22 @@ export default function BookContainer({ book_name, chapters }: BookContainer) {
 
   const toggle = () => setIsActive((prev) => !prev);
 
+  useEffect(() => {
+    if (bRef.current == null) return;
+    if (searchResults.book === book_name && searchResults.chapter == null) {
+      setIsActive(searchResults.book === book_name)
+      scrollHandler(bRef.current);
+    } else {
+      setIsActive(false);
+    }
+
+  }, [searchResults.book])
+
   return (
     <div className="flex flex-col items-start border-2 border-[--border-one]">
       <button
         onClick={toggle}
+        ref={bRef}
         id={`${book_name}`}
         className={`w-full p-0.5 px-1 text-start hover:border-[--ac-one] hover:bg-[--ac-one] hover:text-[--text-two] duration-100 transition-all ease-linear ${cn(isActive, 'bg-[--ac-two] text-[--text-two]')} duration-200 transition-all ease-linear`}
       >
@@ -33,7 +50,7 @@ export default function BookContainer({ book_name, chapters }: BookContainer) {
       {isActive && (
         <div className="flex flex-col w-full border-t-2 border-[--bg-one]">
           {formattedChapters.map((data, index) => (
-            <ChapterContainer key={index} {...data} />
+            <ChapterContainer key={index} {...data} searchResults={searchResults} scrollHandler={scrollHandler} />
           ))}
         </div>
       )}

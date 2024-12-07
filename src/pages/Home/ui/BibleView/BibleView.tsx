@@ -7,23 +7,13 @@ import styles from './bibleview.module.css';
 import BookContainer from './BookContainer';
 import { fuzz, SearchResult } from '../../../../lib/fuzz';
 
-type DataRef = {
-  tag: any | null;
-  pat: string;
-};
-
 export default function BibleView() {
   const containerRef = useRef<HTMLDivElement>(null);
   // reference to the input element
   const inputRef = useRef<HTMLInputElement>(null);
   // state for search input and search results
   const [searchTerm, setSearchTerm] = useState('');
-  // state for tracking clicks on buttons
-  const bookDataRef = useRef<DataRef>({ tag: null, pat: '*' });
-
-  const chapterDataRef = useRef<DataRef>({ tag: null, pat: '*' });
-
-  const verseTagRef = useRef<DataRef>({ tag: null, pat: '*' });
+  const [searchResults, setSearchResults] = useState<SearchResult>({ book: null, chapter: null, verse: null });
 
   const snapShotOfBible = useMemo(
     () => Bible.getBibleData,
@@ -31,82 +21,10 @@ export default function BibleView() {
   );
 
   const debouncedInput = debounce((string: string) => {
-    const id: SearchResult = fuzz(string.toLowerCase());
-
-    if (inputRef.current && containerRef.current) {
-      if (id.book) {
-        const containerTop = containerRef.current.getBoundingClientRect().top;
-
-        const bookTag: HTMLElement | null = document.getElementById(id.book);
-
-        if (!bookTag) return;
-
-        /* click button once */
-        if (
-          bookDataRef.current.pat == '*' ||
-          id.book != bookDataRef.current.pat
-        ) {
-          const bRectTop = bookTag.getBoundingClientRect().top;
-          containerRef.current.scrollBy(0, bRectTop - containerTop);
-          bookDataRef.current.tag = bookTag;
-          bookDataRef.current.pat = id.book;
-
-          bookTag.click();
-        }
-
-        if (id.chapter) {
-          const chapterTag: HTMLElement | null = document.getElementById(
-            id.chapter
-          );
-
-          if (!chapterTag) return;
-
-          // click button once
-          if (
-            chapterDataRef.current.tag == null ||
-            id.chapter != chapterDataRef.current.pat
-          ) {
-            const cRectTop = chapterTag?.getBoundingClientRect().top;
-            containerRef.current.scrollBy(0, cRectTop - containerTop);
-            chapterDataRef.current.tag = chapterTag;
-            chapterDataRef.current.pat = id.chapter;
-            chapterTag?.click();
-          }
-
-          if (id.verse) {
-            const verseTag: HTMLElement | null = document.getElementById(
-              id.verse
-            );
-
-            if (!verseTag) return;
-
-            // click button once
-            if (
-              verseTagRef.current.tag == null ||
-              id.verse != verseTagRef.current?.pat
-            ) {
-              verseTagRef.current.tag = verseTag;
-              verseTagRef.current.pat = id.verse;
-              const vRectTop = verseTag.getBoundingClientRect().top;
-              containerRef.current.scrollBy(0, vRectTop - containerTop);
-            }
-          } else {
-            verseTagRef.current.tag?.click();
-            verseTagRef.current.tag = null;
-            bookDataRef.current.pat = '*';
-          }
-        } else {
-          chapterDataRef.current.tag.click();
-          chapterDataRef.current.tag = null;
-          chapterDataRef.current.pat = '*';
-        }
-      } else {
-        bookDataRef.current.tag.click();
-        bookDataRef.current.tag = null;
-        bookDataRef.current.pat = '*';
-      }
-    }
-  }, 500);
+    const res = fuzz(string.toLowerCase())
+    if (res.book == null) scrollHandler(null);
+    setSearchResults(res)
+  }, 900);
 
   const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
     const term = event.target.value;
@@ -114,31 +32,30 @@ export default function BibleView() {
     setSearchTerm(term);
   };
 
-  const keyListener = (event: KeyboardEvent) => {
-    if (event.key === 'Enter') {
+
+  const scrollHandler = (target: HTMLElement | null) => {
+    if (!containerRef.current) return;
+
+    const container = containerRef.current;
+
+    if (target == null) {
+      container.scrollTo({ top: 0, behavior: 'instant' });
+      return;
     }
+
+    // Get the top position of the target relative to the document
+    const targetRect = target.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+
+    // Calculate the scroll offset needed to align the target's top to the container's top
+    const scrollOffset = targetRect.top - containerRect.top + container.scrollTop;
+
+    // Scroll the container to the calculated offset
+    container.scrollTo({
+      top: scrollOffset,
+      behavior: 'smooth', // Smooth scrolling
+    });
   };
-
-  const addKeyTracker = () => {
-    window.addEventListener('keypress', keyListener);
-  };
-  const removeKeyTracker = () => {
-    window.removeEventListener('keypress', keyListener);
-  };
-
-  useEffect(() => {
-    if (inputRef.current == null) return;
-
-    inputRef.current.addEventListener('focus', addKeyTracker);
-    inputRef.current.addEventListener('blur', removeKeyTracker);
-
-    return () => {
-      if (inputRef.current == null) return;
-
-      inputRef.current.removeEventListener('focus', addKeyTracker);
-      inputRef.current.removeEventListener('blur', removeKeyTracker);
-    };
-  }, []);
 
   return (
     <div className={styles.body}>
@@ -153,7 +70,7 @@ export default function BibleView() {
       </div>
       <div ref={containerRef} className={styles.bible_view_content}>
         {snapShotOfBible.map((book, index) => (
-          <BookContainer key={index} {...book} />
+          <BookContainer key={index} {...book} searchResults={searchResults} scrollHandler={scrollHandler} />
         ))}
       </div>
     </div>

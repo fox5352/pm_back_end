@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import {
   addSlide,
@@ -8,6 +8,7 @@ import {
   Content,
   getIndex,
 } from '../../../../store/playlist';
+import { SearchResult } from '../../../../lib/fuzz';
 
 export type Verse = {
   book_name: string;
@@ -15,6 +16,8 @@ export type Verse = {
   chapter_num: string;
   verse_num: string;
   text: string;
+  searchResults: SearchResult;
+  scrollHandler: (targetTop: HTMLElement | null) => void;
 };
 
 export type VerseContainer = Verse & {};
@@ -25,7 +28,10 @@ export default function VerseContainer({
   chapter_num,
   verse_num,
   text,
+  searchResults,
+  scrollHandler
 }: VerseContainer) {
+  const id = `${book_name}:${chapter_name}:${verse_num}`;
   const pRef = useRef<HTMLParagraphElement>(null);
 
   const addSlideOnDBClick = async () => {
@@ -93,10 +99,17 @@ export default function VerseContainer({
     if (pRef.current) pRef.current.style.opacity = '1';
   };
 
+  useEffect(() => {
+    if (pRef.current == null) return;
+    if (searchResults.verse == id) {
+      scrollHandler(pRef.current);
+    }
+  }, [searchResults.verse])
+
   return (
     <p
       ref={pRef}
-      id={`${book_name}:${chapter_name}:${verse_num}`}
+      id={id}
       draggable
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
