@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { ChangeEvent, useMemo, useRef, useState } from 'react';
 import { Bible } from '../../../../api/requests';
 
 import { debounce } from '../../../../lib/tools';
@@ -13,7 +13,11 @@ export default function BibleView() {
   const inputRef = useRef<HTMLInputElement>(null);
   // state for search input and search results
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState<SearchResult>({ book: null, chapter: null, verse: null });
+  const [searchResults, setSearchResults] = useState<SearchResult>({
+    book: null,
+    chapter: null,
+    verse: null,
+  });
 
   const snapShotOfBible = useMemo(
     () => Bible.getBibleData,
@@ -21,9 +25,9 @@ export default function BibleView() {
   );
 
   const debouncedInput = debounce((string: string) => {
-    const res = fuzz(string.toLowerCase())
+    const res = fuzz(string.toLowerCase());
     if (res.book == null) scrollHandler(null);
-    setSearchResults(res)
+    setSearchResults(res);
   }, 900);
 
   const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +35,6 @@ export default function BibleView() {
     debouncedInput(term);
     setSearchTerm(term);
   };
-
 
   const scrollHandler = (target: HTMLElement | null) => {
     if (!containerRef.current) return;
@@ -48,7 +51,8 @@ export default function BibleView() {
     const containerRect = container.getBoundingClientRect();
 
     // Calculate the scroll offset needed to align the target's top to the container's top
-    const scrollOffset = targetRect.top - containerRect.top + container.scrollTop;
+    const scrollOffset =
+      targetRect.top - containerRect.top + container.scrollTop;
 
     // Scroll the container to the calculated offset
     container.scrollTo({
@@ -70,7 +74,12 @@ export default function BibleView() {
       </div>
       <div ref={containerRef} className={styles.bible_view_content}>
         {snapShotOfBible.map((book, index) => (
-          <BookContainer key={index} {...book} searchResults={searchResults} scrollHandler={scrollHandler} />
+          <BookContainer
+            key={index}
+            {...book}
+            searchResults={searchResults}
+            scrollHandler={scrollHandler}
+          />
         ))}
       </div>
     </div>

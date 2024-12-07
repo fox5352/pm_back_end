@@ -5,11 +5,16 @@ import { cn } from '../../../../lib/css';
 import { SearchResult } from '../../../../lib/fuzz';
 
 type BookContainer = Book & {
-  searchResults: SearchResult
-  scrollHandler: (target: HTMLElement | null) => void
+  searchResults: SearchResult;
+  scrollHandler: (target: HTMLElement | null) => void;
 };
 
-export default function BookContainer({ book_name, chapters, searchResults, scrollHandler }: BookContainer) {
+export default function BookContainer({
+  book_name,
+  chapters,
+  searchResults,
+  scrollHandler,
+}: BookContainer) {
   const bRef = useRef<HTMLButtonElement>(null);
   const [isActive, setIsActive] = useState<boolean>(false);
 
@@ -29,13 +34,12 @@ export default function BookContainer({ book_name, chapters, searchResults, scro
   useEffect(() => {
     if (bRef.current == null) return;
     if (searchResults.book === book_name && searchResults.chapter == null) {
-      setIsActive(searchResults.book === book_name)
+      setIsActive(searchResults.book === book_name);
       scrollHandler(bRef.current);
     } else {
       setIsActive(false);
     }
-
-  }, [searchResults.book])
+  }, [searchResults.book]);
 
   return (
     <div className="flex flex-col items-start border-2 border-[--border-one]">
@@ -50,7 +54,12 @@ export default function BookContainer({ book_name, chapters, searchResults, scro
       {isActive && (
         <div className="flex flex-col w-full border-t-2 border-[--bg-one]">
           {formattedChapters.map((data, index) => (
-            <ChapterContainer key={index} {...data} searchResults={searchResults} scrollHandler={scrollHandler} />
+            <ChapterContainer
+              key={index}
+              {...data}
+              searchResults={searchResults}
+              scrollHandler={scrollHandler}
+            />
           ))}
         </div>
       )}

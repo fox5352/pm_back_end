@@ -9,9 +9,8 @@ type ChapterContainer = {
   chapter_name: string;
   chapter_num: string;
   verses: Verse;
-  searchResults: SearchResult
-  scrollHandler: (targetTop: HTMLElement | null) => void
-
+  searchResults: SearchResult;
+  scrollHandler: (targetTop: HTMLElement | null) => void;
 };
 
 export default function ChapterContainer({
@@ -20,7 +19,7 @@ export default function ChapterContainer({
   chapter_num,
   verses,
   searchResults,
-  scrollHandler
+  scrollHandler,
 }: ChapterContainer) {
   const id = `${book_name}:${chapter_name}`;
   const cBRef = useRef<HTMLButtonElement>(null);

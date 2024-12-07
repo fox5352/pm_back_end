@@ -29,7 +29,7 @@ export default function VerseContainer({
   verse_num,
   text,
   searchResults,
-  scrollHandler
+  scrollHandler,
 }: VerseContainer) {
   const id = `${book_name}:${chapter_name}:${verse_num}`;
   const pRef = useRef<HTMLParagraphElement>(null);
@@ -104,7 +104,7 @@ export default function VerseContainer({
     if (searchResults.verse == id) {
       scrollHandler(pRef.current);
     }
-  }, [searchResults.verse])
+  }, [searchResults.verse]);
 
   return (
     <p
