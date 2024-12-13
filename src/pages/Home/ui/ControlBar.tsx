@@ -1,18 +1,17 @@
 import { cn } from '../../../lib/css.ts';
 
 import Button from './ControlButton.tsx';
+
 import useTheme from '../../../hooks/useTheme.tsx';
+
 import { useEffect, useState } from 'react';
-import { invoke } from '@tauri-apps/api/tauri';
-import { get_is_live } from '../../../store/display.ts';
+import { get_is_live, toggle_live } from '../../../store/display.ts';
 
 export default function ControlBar() {
   const [isLive, setIsLive] = useState(false);
   const [theme, toggleTheme] = useTheme();
 
-  const toggleHandler = () => {
-    invoke('toggle_is_live');
-  };
+  const toggleHandler = () => toggle_live()
 
   useEffect(() => {
     let timer: any = undefined;
@@ -40,6 +39,7 @@ export default function ControlBar() {
       >
         Live
       </Button>
+
     </div>
   );
 }
