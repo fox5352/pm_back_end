@@ -1,6 +1,8 @@
 pub mod store;
 
 pub mod bible_types {
+    use rustpm_orm::database::{gen_id, Id};
+
 
     #[derive(serde::Serialize, serde::Deserialize)]
     pub struct Verse {
@@ -61,16 +63,28 @@ pub mod bible_types {
 
     #[derive(serde::Serialize, serde::Deserialize)]
     pub struct Bible {
+        pub id: String,
         pub meta_data: MetaData,
         pub book: Book,
     }
 
-    pub struct TabeIndex {
+    impl Id for Bible {
+        fn gen_id(&self) -> String {
+            return gen_id();
+        }
+    }
+
+
+    #[derive(serde::Serialize,serde::Deserialize)]
+    pub struct TableIndex {
         pub short_name: String,
         pub id: String,
     }
 
-    pub struct Table {
-        pub books: Vec<TabeIndex>,
+    impl Id for TableIndex {
+        fn gen_id(&self) -> String {
+            gen_id()
+        }
     }
+
 }

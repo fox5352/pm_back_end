@@ -4,7 +4,7 @@
 )]
 
 use pm_manager::{
-    bible_types::Bible,
+    bible_types::{Bible, TableIndex},
     store::{
         display::DisplayHook,
         playlist::{PlayListHook, Slide},
@@ -27,6 +27,28 @@ struct Package<T> {
     data: Option<T>,
     message: String,
     error: bool,
+}
+
+// Helper impl for Package
+impl<T> Package<T> {
+    fn error(message: String) -> Self {
+        Package {
+            data: None,
+            message,
+            error: true
+        }
+    }
+}
+
+// Generic implementation for any error type that implements std::error::Error
+impl<T, E: std::error::Error> From<E> for Package<T> {
+    fn from(error: E) -> Self {
+        Package {
+            data: None,
+            message: error.to_string(),
+            error: true,
+        }
+    }
 }
 
 /// A helper function to safely lock and access a `Mutex` wrapped in a `OnceLock`.
@@ -315,27 +337,41 @@ fn get_index() -> Package<Option<i32>> {
 /// Gets Bible from front end and stores them into the database
 ///
 /// #Returns
-/// A `bool` to indicate oparations state
+/// A `bool` to indicate operations state
 #[tauri::command]
-fn save_bible(bible: Bible) -> Package<bool> {
-    // if let Some(hook) = BIBLE_DB_HOOK.get() {
-    //     if let Ok(db) = hook.lock() {
-    //         let bible_version = bible.meta_data.shortname.clone();
-
-    //         if let Ok(id) = db.insert_data(bible) {}
-    //     } else {
-    //         return Package {
-    //             data: None,
-    //             message: format!("Failed to lock bible db hook"),
-    //             error: true,
-    //         };
-    //     }
-    // } else {
-    return Package {
-        data: Option::None,
-        message: String::from("bible db hook not initialized"),
-        error: true,
+fn save_bible(bible: Bible) -> Package<String> {
+    // Get database locks first
+    let bible_db = match lock_helper(&BIBLE_DB_HOOK) {
+        Ok(db) => db,
+        Err(err) => return Package::error(err.to_string())
     };
+    
+    let table_db = match lock_helper(&TABLE_DB_HOOK) {
+        Ok(db) => db,
+        Err(err) => return Package::error(err.to_string())
+    };
+
+    // Store the short name before moving bible into insert_data
+    let short_name = bible.meta_data.shortname.clone();
+    
+    // Insert bible and create index
+    let bible_id = match bible_db.insert_data(bible) {
+        Ok(id) => id,
+        Err(err) => return Package::error(err.to_string())
+    };
+
+    // Insert table index (using _ since we don't need the result)
+    let _result = table_db.insert_data(TableIndex { 
+        short_name, 
+        id: bible_id.clone() 
+    });
+
+    // Return success package
+    Package {
+        data: Some(bible_id),
+        message: "Bible saved successfully".to_string(),
+        error: false
+    }
 }
 
 fn main() {
@@ -345,19 +381,21 @@ fn main() {
     PLAYLIST_HOOK
         .set(Mutex::new(PlayListHook::new()))
         .expect("failed to initialize playlist hook");
-    let db = DBManager::new(String::from("bible_db")).expect("Failed to connect to database");
+    let bible_db = DBManager::new(String::from("bible_db")).expect("Failed to connect to database");
     BIBLE_DB_HOOK
-        .set(Mutex::new(db))
+        .set(Mutex::new(bible_db))
         .expect("failed to initialize playlist hook");
+    let table_db = DBManager::new(String::from("bible_table")).expect("Failed to connect to database");
+    TABLE_DB_HOOK.set(Mutex::new(table_db)).expect("failed to initialize table hook");
 
     tauri::Builder::default()
-        .setup(|app| {
-            let _preview_window = tauri::WindowBuilder::new(
-                app,
-                "live-view", // Changed from "live view" to "live-view"
-                tauri::WindowUrl::App("/live".into()),
-            )
-            .build()?;
+        .setup(|_app| {
+            // let _preview_window = tauri::WindowBuilder::new(
+            //     app,
+            //     "live-view", // Changed from "live view" to "live-view"
+            //     tauri::WindowUrl::App("/live".into()),
+            // )
+            // .build()?;
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

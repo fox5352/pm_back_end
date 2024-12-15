@@ -26,3 +26,4 @@ dist-ssr
 
 # db names
 bible_db/
+bible_table/

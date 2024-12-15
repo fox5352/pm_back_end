@@ -77,11 +77,11 @@
         },
         "resources": [],
         "shortDescription": "",
-        "targets": ["msi"],
+        "targets": "all",
         "windows": {
           "webviewInstallMode": {
-            "silent": true,
-            "type": "offlineInstaller"
+            "silent": false,
+            "type": "embedBootstrapper"
           },
           "certificateThumbprint": null,
           "digestAlgorithm": "sha256",
@@ -101,6 +101,17 @@
           "title": "pm_manager",
           "height": 720,
           "width": 1280
+        },
+        {
+          "fullscreen": false,
+          "resizable": true,
+          "label": "view",
+          "title": "view",
+          "height": 720,
+          "width": 1280,
+          "alwaysOnTop": true,
+          "url": "index.html/live",
+          "hiddenTitle": true
         }
       ]
     }
