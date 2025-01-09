@@ -1,8 +1,11 @@
 import { useState } from 'react';
+
 import TabButton from './TabButton';
 import BibleView from './BibleView/BibleView';
 
 import styles from './tabs.module.css';
+import Settings from './SettingsView';
+import SongsView from './SongsView/SongsView';
 
 export default function Tabs() {
   const [currentTab, setCurrentTab] = useState('Bible');
@@ -13,8 +16,9 @@ export default function Tabs() {
 
   const TABS = [
     { text: 'Bible', element: <BibleView /> },
-    { text: 'Songs', element: null },
+    { text: 'Songs', element: <SongsView /> },
     { text: 'Background', element: null },
+    { text: 'Settings', element: <Settings /> },
   ];
 
   return (
