@@ -11,7 +11,7 @@ export default function ControlBar() {
   const [isLive, setIsLive] = useState(false);
   const [theme, toggleTheme] = useTheme();
 
-  const toggleHandler = () => toggle_live()
+  const toggleHandler = () => toggle_live();
 
   useEffect(() => {
     let timer: any = undefined;
@@ -39,7 +39,6 @@ export default function ControlBar() {
       >
         Live
       </Button>
-
     </div>
   );
 }
