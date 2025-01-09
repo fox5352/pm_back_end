@@ -90,7 +90,7 @@ fn get_is_live() -> Package<bool> {
             data: None,
             message: err.to_string(),
             error: true,
-        }    
+        }
     }
 }
 
@@ -100,7 +100,7 @@ fn get_is_live() -> Package<bool> {
 /// A `Package` indicating success or failure.
 #[tauri::command]
 fn toggle_is_live() -> Package<()> {
-    return match lock_helper(&DISPLAY_HOOK) {  
+    return match lock_helper(&DISPLAY_HOOK) {
         Ok(mut data) => {
             data.toggle();
             Package {
@@ -113,7 +113,7 @@ fn toggle_is_live() -> Package<()> {
             data: None,
             message: err.to_string(),
             error: true,
-        }    
+        }
     }
 }
 
@@ -139,7 +139,7 @@ fn set_index(idx: Option<i32>) -> Package<()> {
             data: None,
             message: err.to_string(),
             error: true,
-        }    
+        }
     }
 }
 
@@ -165,7 +165,7 @@ fn set_bg(bg: Option<String>) -> Package<()> {
                 data: None,
                 message: err.to_string(),
                 error: true,
-            }    
+            }
     }
 }
 
@@ -191,7 +191,7 @@ fn add_slide(slide: Slide) -> Package<()> {
             data: None,
             message: err.to_string(),
             error: true,
-        }    
+        }
     }
 }
 
@@ -217,7 +217,7 @@ fn remove_slide(id: String) -> Package<()> {
             data: None,
             message: err.to_string(),
             error: true,
-        }    
+        }
     }
 }
 
@@ -243,7 +243,7 @@ fn update_slide(slide: Slide) -> Package<()> {
             data: None,
             message: err.to_string(),
             error: true,
-        }    
+        }
     }
 }
 
@@ -263,7 +263,7 @@ fn get_list() -> Package<Vec<Slide>> {
             data: None,
             message: err.to_string(),
             error: true,
-        }    
+        }
     }
 }
 
@@ -289,7 +289,7 @@ fn get_list_item(index: usize) -> Package<Slide> {
             data: None,
             message: err.to_string(),
             error: true,
-        }    
+        }
     }
 }
 
@@ -331,7 +331,7 @@ fn get_index() -> Package<Option<i32>> {
             error: true,
         },
     }
-    
+
 }
 
 /// Gets Bible from front end and stores them into the database
@@ -345,7 +345,7 @@ fn save_bible(bible: Bible) -> Package<String> {
         Ok(db) => db,
         Err(err) => return Package::error(err.to_string())
     };
-    
+
     let table_db = match lock_helper(&TABLE_DB_HOOK) {
         Ok(db) => db,
         Err(err) => return Package::error(err.to_string())
@@ -353,7 +353,7 @@ fn save_bible(bible: Bible) -> Package<String> {
 
     // Store the short name before moving bible into insert_data
     let short_name = bible.meta_data.shortname.clone();
-    
+
     // Insert bible and create index
     let bible_id = match bible_db.insert_data(bible) {
         Ok(id) => id,
@@ -361,9 +361,9 @@ fn save_bible(bible: Bible) -> Package<String> {
     };
 
     // Insert table index (using _ since we don't need the result)
-    let _result = table_db.insert_data(TableIndex { 
-        short_name, 
-        id: bible_id.clone() 
+    let _result = table_db.insert_data(TableIndex {
+        short_name,
+        id: bible_id.clone()
     });
 
     // Return success package
@@ -389,13 +389,20 @@ fn main() {
     TABLE_DB_HOOK.set(Mutex::new(table_db)).expect("failed to initialize table hook");
 
     tauri::Builder::default()
-        .setup(|_app| {
-            // let _preview_window = tauri::WindowBuilder::new(
-            //     app,
-            //     "live-view", // Changed from "live view" to "live-view"
-            //     tauri::WindowUrl::App("/live".into()),
-            // )
-            // .build()?;
+        .setup(|app| {
+            let handle = app.handle();
+
+            std::thread::spawn(move|| {
+                tauri::WindowBuilder::new(
+                    &handle,
+                    "live-view", // Changed from "live view" to "live-view"
+                    tauri::WindowUrl::App("/live".into()),
+                )
+                .build()
+                .expect("failed to create preview window");
+                
+            });
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
