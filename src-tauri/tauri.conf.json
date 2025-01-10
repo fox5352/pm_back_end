@@ -9,7 +9,7 @@
     },
     "package": {
       "productName": "Pm_manager",
-      "version": "0.2.0"
+      "version": "0.3.0"
     },
     "tauri": {
       "allowlist": {
@@ -48,6 +48,14 @@
             "$HOME"
           ],
           "writeFile": true
+        },
+        "dialog": {
+          "all": false,
+          "ask": false,
+          "confirm": false,
+          "message": false,
+          "open": true,
+          "save": false
         },
         "path": {
           "all": true

@@ -75,7 +75,7 @@ pub mod playlist {
 
 #[cfg(test)]
 mod test_display {
-    use crate::display::DisplayHook;
+    use crate::store::display::DisplayHook;
 
     #[test]
     fn create_display_hook() {
@@ -102,7 +102,7 @@ mod test_display {
 
 #[cfg(test)]
 mod test_playlist {
-    use crate::playlist::{Content, PlayListHook, Slide};
+    use crate::store::playlist::{Content, PlayListHook, Slide};
 
     #[test]
     fn create_playlist_hook() {

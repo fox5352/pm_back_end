@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Content, getList, getIndex, getBg, Slide } from '../store/playlist';
 
 import { get_is_live } from '../store/display';
+import { cn } from '../lib/css';
 
 export type DisplayScreen = {
   className?: string;
@@ -24,6 +25,7 @@ export default function DisplayScreen({
 
   // local state
   const [text, setText] = useState<Content[] | null>(null);
+  const [image, setImage] = useState<string | null>(null);
 
   useEffect(() => {
     let timer: any = undefined;
@@ -47,6 +49,10 @@ export default function DisplayScreen({
         return;
       }
 
+      if (bg) {
+        setImage(bg == 'none' ? null : bg);
+      }
+
       if (index == null || !list[index]) {
         setText(null);
         return;
@@ -57,16 +63,16 @@ export default function DisplayScreen({
       if (slideData) {
         setText(slideData.text);
 
-        // if bg is valid local then check for store bg
-        if (bg) {
-          bodyRef.current.style.backgroundImage = `src(${slideData.bg})`;
-        } else if (bg) {
-          bodyRef.current.style.backgroundImage = `src(${bg})`;
+        if (slideData.bg) {
+          setImage(slideData.bg);
         }
-        //
       }
     }
   }, [isLive, bodyRef, list, index, preview, bg]);
+
+  useEffect(() => {
+    console.log(image);
+  }, [image]);
 
   const mapper = (data: Content) => {
     const id = `${Math.round(Math.random() * 999)}-${Math.round(Math.random() * 999)}`;
@@ -97,9 +103,22 @@ export default function DisplayScreen({
   return (
     <div
       ref={bodyRef}
-      className={`flex flex-col flex-grow justify-center items-center w-full h-full px-4 py-3 text-center ${className}`}
+      className={`flex flex-col flex-grow justify-center items-center w-full h-full px-4 py-3 text-center ${className} relative`}
     >
-      {text && text.map(mapper)}
+      {image && (
+        <>
+          <img
+            src={image}
+            className="absolute left-0 top-0 w-full h-full z-0 bg-contain bg-center blur-[1px]"
+          />
+          <div className="absolute left-0 top-0 w-full h-full bg-stone-800 opacity-15  z-10"></div>
+        </>
+      )}
+      <div
+        className={`absolute top-0 left-0 flex flex-col flex-grow justify-center items-center w-full h-full px-4 py-3 ${cn(image != null, 'text-shadow text-[--text-two]')} text-center z-20`}
+      >
+        {text && text.map(mapper)}
+      </div>
     </div>
   );
 }

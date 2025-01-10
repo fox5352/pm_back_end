@@ -52,3 +52,11 @@ body {
   background-color: var(--bg-two);
   transition: background-color 200ms linear;
 }
+
+.text-shadow {
+  text-shadow:
+    1px 1px black,
+    1px -1px black,
+    -1px -1px black,
+    -1px 1px black;
+}

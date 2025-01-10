@@ -6,6 +6,7 @@ import BibleView from './BibleView/BibleView';
 import styles from './tabs.module.css';
 import Settings from './SettingsView';
 import SongsView from './SongsView/SongsView';
+import ImageView from './ImageView/ImageView';
 
 export default function Tabs() {
   const [currentTab, setCurrentTab] = useState('Bible');
@@ -17,7 +18,7 @@ export default function Tabs() {
   const TABS = [
     { text: 'Bible', element: <BibleView /> },
     { text: 'Songs', element: <SongsView /> },
-    { text: 'Background', element: null },
+    { text: 'Images', element: <ImageView /> },
     { text: 'Settings', element: <Settings /> },
   ];
 
